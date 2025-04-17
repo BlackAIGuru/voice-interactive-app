@@ -15,7 +15,7 @@ export interface ChatResponse {
 }
 
 // Base URL for our API
-const API_BASE_URL = 'https://4pkjdn4j5oe9quveqyxo:i5x551auu40rnjgiqnoi@pweb5l7qknzn40-19123-4pkjdn4j5oe9quveqyxo.proxy.runpod.net';
+const API_BASE_URL = 'https://pweb5l7qknzn40-5000.proxy.runpod.net';
 
 // API service for handling communication with our Flask backend
 export const apiService = {

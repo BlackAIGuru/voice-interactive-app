@@ -1,0 +1,148 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 20 43% 97%;
+    --foreground: 240 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 15%;
+
+    --primary: 16 100% 83%;
+    --primary-foreground: 240 10% 15%;
+
+    --secondary: 350 59% 79%;
+    --secondary-foreground: 240 10% 15%;
+
+    --muted: 16 36% 92%;
+    --muted-foreground: 240 5% 45%;
+
+    --accent: 16 100% 83%;
+    --accent-foreground: 240 10% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 20 15% 90%;
+    --input: 20 15% 90%;
+    --ring: 16 100% 83%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 12%;
+    --foreground: 0 0% 95%;
+
+    --card: 240 10% 15%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 10% 15%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 16 90% 75%;
+    --primary-foreground: 240 10% 15%;
+
+    --secondary: 350 59% 70%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 240 5% 25%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 16 90% 75%;
+    --accent-foreground: 240 10% 15%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 240 5% 25%;
+    --input: 240 5% 25%;
+    --ring: 16 90% 75%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Custom scrollbar for the chat container */
+  .chat-container::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chat-container::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 20px;
+  }
+}
+
+@layer components {
+  .gradient-background {
+    @apply bg-gradient-to-b from-assistant-background to-white;
+  }
+  
+  .mic-button {
+    @apply relative flex items-center justify-center rounded-full transition-all duration-300 ease-in-out;
+  }
+  
+  .mic-button::before {
+    @apply content-[''] absolute rounded-full;
+  }
+  
+  .mic-button-inner {
+    @apply rounded-full flex items-center justify-center transition-all duration-300;
+  }
+  
+  .mic-button-recording .mic-button-inner {
+    @apply bg-assistant-secondary animate-pulse-light;
+  }
+  
+  .mic-button-recording::before {
+    @apply animate-pulse-ring bg-assistant-secondary bg-opacity-50;
+  }
+  
+  .chat-message {
+    @apply p-4 rounded-lg mb-3 max-w-[85%] animate-fade-in;
+  }
+  
+  .user-message {
+    @apply bg-assistant-primary bg-opacity-30 ml-auto text-right;
+  }
+  
+  .assistant-message {
+    @apply bg-white mr-auto;
+  }
+
+  .upload-zone {
+    @apply border-2 border-dashed border-assistant-primary border-opacity-50 rounded-lg p-6 transition-all duration-300 hover:border-opacity-100;
+  }
+
+  .upload-zone.active {
+    @apply border-assistant-secondary border-opacity-100 bg-assistant-secondary bg-opacity-5;
+  }
+}

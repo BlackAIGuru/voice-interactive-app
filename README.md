@@ -54,7 +54,7 @@ A beautiful web application that allows users to interact with an AI assistant u
    ```
 2. Install Python dependencies:
    ```
-   pip install flask flask-cors python-docx PyPDF2 openai
+   pip install flask flask-cors python-docx PyPDF2 openai dotenv
    ```
 3. Set your OpenAI API key in `server.py`
 4. Start the Flask server:

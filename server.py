@@ -194,7 +194,7 @@ def audio_chat():
             'userMessage': transcription,
             'message': assistant_response,
             'transcription': transcription,
-            'audioUrl': audio_url
+            'audioUrl': "https://pweb5l7qknzn40-5000.proxy.runpod.net" + audio_url
         })
 
     except Exception as e:

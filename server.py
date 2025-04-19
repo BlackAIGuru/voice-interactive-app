@@ -132,7 +132,7 @@ def chat():
 
         return jsonify({
             'message': assistant_response,
-            'audioUrl': "https://pweb5l7qknzn40-5000.proxy.runpod.net" + audio_url
+            'audioUrl': "https://5cqhaj7rws0lax-5000.proxy.runpod.net" + audio_url
         })
 
     except Exception as e:
@@ -194,7 +194,7 @@ def audio_chat():
             'userMessage': transcription,
             'message': assistant_response,
             'transcription': transcription,
-            'audioUrl': "https://pweb5l7qknzn40-5000.proxy.runpod.net" + audio_url
+            'audioUrl': "https://5cqhaj7rws0lax-5000.proxy.runpod.net" + audio_url
         })
 
     except Exception as e:

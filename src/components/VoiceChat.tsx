@@ -11,7 +11,6 @@ import { VolumeX, Info, Send } from 'lucide-react';
 const VoiceChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [isContinuousMode, setIsContinuousMode] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
   const [hasUploadedDocument, setHasUploadedDocument] = useState(false);
@@ -31,10 +30,6 @@ const VoiceChat: React.FC = () => {
     audioRef.current = new Audio();
     audioRef.current.onended = () => {
       setCurrentPlayingId(null);
-      // Auto restart recording when the assistant finishes speaking
-      if (isContinuousMode && !isRecording && !isProcessing) {
-        startRecording();
-      }
     };
     
     return () => {
@@ -43,7 +38,7 @@ const VoiceChat: React.FC = () => {
         audioRef.current = null;
       }
     };
-  }, [isContinuousMode, isRecording, isProcessing]);
+  }, []);
 
   // Check microphone permission on mount
   useEffect(() => {
@@ -67,19 +62,9 @@ const VoiceChat: React.FC = () => {
   }, [toast]);
 
   const handleToggleRecording = async () => {
-    if (!isRecording && !isContinuousMode) {
-      // Start a new continuous conversation
-      startRecording();
-      setIsContinuousMode(true);
-    } else if (isRecording && isContinuousMode) {
-      // Stop in continuous mode means end the entire conversation
-      stopRecording();
-      setIsContinuousMode(false);
-    } else if (isRecording) {
-      // Normal stop recording (not in continuous mode)
+    if (isRecording) {
       stopRecording();
     } else {
-      // Normal start recording (not in continuous mode)
       startRecording();
     }
   };
@@ -103,18 +88,15 @@ const VoiceChat: React.FC = () => {
       mediaRecorder.start();
       setIsRecording(true);
       
-      // Only add the "Recording..." indicator if we're not in continuous mode
-      // or if this is the first message in a continuous conversation
-      if (!isContinuousMode || messages.length === 0) {
-        const newUserMessage: Message = {
-          id: Date.now().toString(),
-          content: "Recording...",
-          role: 'user',
-          timestamp: Date.now()
-        };
-        
-        setMessages(prev => [...prev, newUserMessage]);
-      }
+      // Add a visual indicator that recording has started
+      const newUserMessage: Message = {
+        id: Date.now().toString(),
+        content: "Recording...",
+        role: 'user',
+        timestamp: Date.now()
+      };
+      
+      setMessages(prev => [...prev, newUserMessage]);
       
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -124,7 +106,6 @@ const VoiceChat: React.FC = () => {
         variant: "destructive"
       });
       setMicPermission(false);
-      setIsContinuousMode(false);
     }
   };
 
@@ -159,7 +140,7 @@ const VoiceChat: React.FC = () => {
       const response = await apiService.sendAudioMessage(audioBlob);
       
       // Replace the temporary message with the actual transcription
-      const transcription = response.message;
+      const transcription = response.userMessage;
       const messageId = Date.now().toString();
       
       setMessages(prev => {
@@ -203,7 +184,6 @@ const VoiceChat: React.FC = () => {
       
       // Remove the "Processing..." message
       setMessages(prev => prev.filter(msg => msg.content !== "Processing your message..."));
-      setIsContinuousMode(false);
     } finally {
       setIsProcessing(false);
     }
@@ -270,7 +250,6 @@ const VoiceChat: React.FC = () => {
         description: "Could not send your message. Please try again.",
         variant: "destructive"
       });
-      setIsContinuousMode(false);
     } finally {
       setIsProcessing(false);
     }
@@ -308,7 +287,7 @@ const VoiceChat: React.FC = () => {
               </div>
             </div>
             <h2 className="text-xl sm:text-2xl font-medium text-assistant-text mb-2">
-              Click the mic to start a voice conversation
+              Click here to start a voice conversation with the assistant
             </h2>
             <p className="text-muted-foreground max-w-md">
               You can also upload a document to chat about its contents
@@ -357,16 +336,13 @@ const VoiceChat: React.FC = () => {
             <MicButton
               isRecording={isRecording}
               onToggleRecording={handleToggleRecording}
-              isDisabled={isProcessing}
-              isStopMode={isContinuousMode && isRecording}
+              isDisabled={isProcessing || micPermission === false}
             />
             
             <p className="text-center text-muted-foreground mt-3 text-sm">
-              {isRecording && isContinuousMode
-                ? "Continuous mode active. Click to stop conversation"
-                : isRecording 
-                  ? "Recording... Click to stop" 
-                  : "Tap to speak"}
+              {isRecording 
+                ? "Recording... Click to stop" 
+                : "Tap to speak"}
             </p>
           </div>
         </div>
